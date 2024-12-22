@@ -1,7 +1,6 @@
-import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import config from '../../config';
+
 import {
   StudentModel,
   TGuardian,
@@ -40,7 +39,13 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'user id is required'],
+    unique: true,
+    ref: 'User',
+  },
+  // password: { type: String, required: true },
   name: userNameSchema,
   gender: {
     type: String,
@@ -67,25 +72,24 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   guardian: gurdianSchema,
   localGuardian: localGuardianSchema,
   profileImg: { type: String },
-  isActive: ['active', 'inActive'],
   isDeleted: {
     type: Boolean,
     default: false,
   },
 });
 
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
+// studentSchema.pre('save', async function (next) {
+//   // eslint-disable-next-line @typescript-eslint/no-this-alias
+//   const user = this;
 
-  user.password = await bcrypt.hash(this.password, Number(config.salt_rounds));
-  next();
-});
+//   user.password = await bcrypt.hash(this.password, Number(config.salt_rounds));
+//   next();
+// });
 
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
+// studentSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 studentSchema.pre('find', function (next) {
   // console.log(this);

@@ -41,6 +41,8 @@ const studentValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
     student: z.object({
+      id: z.string().min(1, { message: 'ID is required' }),
+
       name: userNameValidationSchema,
       gender: z.enum(['male', 'Female', 'other'], {
         errorMap: () => ({ message: 'Write male, female or others' }),

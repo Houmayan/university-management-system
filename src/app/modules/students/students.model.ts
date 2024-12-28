@@ -72,6 +72,11 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   guardian: gurdianSchema,
   localGuardian: localGuardianSchema,
   profileImg: { type: String },
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    // required: [true, 'Admission Semester is required'],
+    ref: 'AcademicSemester',
+  },
   isDeleted: {
     type: Boolean,
     default: false,

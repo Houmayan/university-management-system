@@ -1,6 +1,7 @@
+import { TAcademicFaculty } from './academicFaculty.interface';
 import { AcademicFaculty } from './academicFaculty.model';
 
-const createAcademicFacultyIntoDb = async (playLoad: TAcademicFacultyx) => {
+const createAcademicFacultyIntoDb = async (playLoad: TAcademicFaculty) => {
   const result = await AcademicFaculty.create(playLoad);
   return result;
 };
@@ -14,10 +15,19 @@ const getAAcademicFacultyFromDb = async (id: string) => {
   return result;
 };
 
-const updateAcademicFacultyFromDb =
+const updateAcademicFacultyFromDb = async (
+  id: string,
+  playLoad: Partial<TAcademicFaculty>,
+) => {
+  const result = await AcademicFaculty.findOneAndUpdate({ _id: id }, playLoad, {
+    new: true,
+  });
+  return result;
+};
 
 export const AcademicFacultyService = {
   createAcademicFacultyIntoDb,
   getAllAcademicFacultiesFromDb,
-  getAAcademicFacultyFromDb
+  getAAcademicFacultyFromDb,
+  updateAcademicFacultyFromDb,
 };

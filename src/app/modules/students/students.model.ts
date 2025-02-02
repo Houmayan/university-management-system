@@ -78,6 +78,11 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     // required: [true, 'Admission Semester is required'],
     ref: 'AcademicSemester',
   },
+  academicDepartment: {
+    type: Schema.Types.ObjectId,
+    // required: [true, 'Admission Semester is required'],
+    ref: 'AcademicDepartment',
+  },
   isDeleted: {
     type: Boolean,
     default: false,
@@ -111,6 +116,14 @@ studentSchema.pre('aggregate', function (next) {
   // console.log(this);
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
+});
+
+studentSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+  const isStudentExist = await Student.findOne({ id: query.id });
+  if (!isStudentExist) {
+    throw new Error('Student not found');
+  }
 });
 // static method
 
